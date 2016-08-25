@@ -1,3 +1,5 @@
+import math
+import re
 #!/usr/bin/python2.4 -tt
 # Copyright 2010 Google Inc.
 # Licensed under the Apache License, Version 2.0
@@ -17,8 +19,16 @@
 # If the string length is less than 3, leave it unchanged.
 # Return the resulting string.
 def verbing(s):
-    # +++your code here+++
-    return
+    primary_end = 'ing'
+    secondary_end = 'ly'
+
+    if len(s) > 3:
+        if not s.endswith(primary_end):
+            s += primary_end
+        else:
+            s += secondary_end
+
+    return s
 
 
 # E. not_bad
@@ -30,8 +40,7 @@ def verbing(s):
 # So 'This dinner is not that bad!' yields:
 # This dinner is good!
 def not_bad(s):
-    # +++your code here+++
-    return
+    return re.sub('not (.*) bad', 'good',s)
 
 
 # F. front_back
@@ -42,8 +51,25 @@ def not_bad(s):
 # Given 2 strings, a and b, return a string of the form
 #  a-front + b-front + a-back + b-back
 def front_back(a, b):
-    # +++your code here+++
-    return
+
+    if len(a) % 2 == 0:
+        a_index = int(len(a) / 2)
+        a_rest = a_index
+    else:
+        a_index = int(math.ceil(len(a) / 2))
+        a_rest = len(a) - a_index + 1
+
+    if len(b) % 2 == 0:
+        b_index = int(len(b) / 2)
+        b_rest = b_index
+    else:
+        b_index = int(math.ceil(len(b) / 2))
+        b_rest = len(b) - b_index + 1
+
+    a_front, a_back = a[:a_index], a[a_rest:]
+    b_front, b_back = b[:b_index], b[b_rest:]
+
+    return a_front + b_front + a_back + b_back
 
 
 # Simple provided test() function used in main() to print
