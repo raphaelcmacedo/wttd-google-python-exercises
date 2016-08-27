@@ -39,6 +39,47 @@ print_words() and print_top().
 
 import sys
 
+def file_to_string(filename):
+    f = open(filename, 'r')
+    content = f.read()
+    f.close()
+    return content
+
+def words_count(content):
+    d = {}
+    content = content.lower()
+    content = content.replace('\n', ' ')
+    words = str(content).split(' ')
+
+    for word in words:
+        if word.isspace() or not word:
+            continue
+        if word in d:
+            d[word] += 1
+        else:
+            d[word] = 1
+    return d
+
+def print_words(filename):
+    content = file_to_string(filename)
+    d = words_count(content)
+
+    for key in d:
+        print(' '.join((key, str(d[key]))))
+
+def print_top(filename):
+    content = file_to_string(filename)
+    d = words_count(content)
+
+    t = sorted(d.items(), key=lambda x:x[1], reverse = True)
+    i = 0
+
+    for object in t:
+        if i >= 20:
+            break
+        print(' '.join((object[0], str(object[1]))))
+        i += 1
+
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
