@@ -35,14 +35,43 @@ Suggested milestones for incremental development:
 """
 
 
+def file_to_string(filename):
+    f = open(filename, 'r')
+    content = f.read()
+    f.close()
+    return content
+
+
 def extract_names(filename):
     """
     Given a file name for baby.html, returns a list starting with the year string
     followed by the name-rank strings in alphabetical order.
     ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
     """
-    # +++your code here+++
-    return
+    names = []
+    content = file_to_string(filename)
+
+    match = re.search(r'Popularity\sin\s(\d\d\d\d)', content)
+    if match:
+        year = match.group(1)
+        names.append(year)
+
+    tuples = re.findall(r'<td>(\d+)</td><td>(\w+)</td>\<td>(\w+)</td>', content)
+
+    d = {}
+    for entry in tuples:
+        (rank, boy, girl) = entry
+        if boy not in d:
+            d[boy] = rank
+        if girl not in d:
+            d[girl] = rank
+
+    names_rank = sorted(d.keys())
+
+    for name in names_rank:
+        names.append(' '.join((name, d[name])))
+
+    return names
 
 
 def main():
@@ -64,6 +93,17 @@ def main():
         # +++your code here+++
         # For each filename, get the names, then either print the text output
         # or write it to a summary file
+
+    for filename in args:
+        names = extract_names(filename)
+        text = '\n'.join(names)
+
+        if summary:
+            out = open(filename + '_summary.txt', 'w')
+            out.write(text + '\n')
+            out.close()
+        else:
+            print(text)
 
 
 if __name__ == '__main__':
