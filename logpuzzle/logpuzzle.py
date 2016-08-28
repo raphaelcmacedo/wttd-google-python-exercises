@@ -68,7 +68,7 @@ def download_images(img_urls, dest_dir):
         html.write('<img src="%s">' % (local_name,))
         i += 1
 
-    html.write('\n</body></html>\n')
+        html.write('\n</body></html>\n')
 
     html.close()
 

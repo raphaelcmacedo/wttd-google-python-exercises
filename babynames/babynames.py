@@ -51,7 +51,7 @@ def extract_names(filename):
     names = []
     content = file_to_string(filename)
 
-    match = re.search(r'Popularity\sin\s(\d\d\d\d)', content)
+    match = re.search(r'(\d\d\d\d)', filename)
     if match:
         year = match.group(1)
         names.append(year)
