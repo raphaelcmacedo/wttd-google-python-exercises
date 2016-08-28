@@ -14,15 +14,38 @@ import sys
 import re
 import os
 import shutil
-import subprocess
-
-"""Copy Special exercise
-
-"""
+import zipfile
 
 
-# +++your code here+++
-# Write functions and modify main() to call them
+def get_special_paths(dir):
+    absolute_paths = []
+    files = os.listdir(dir)
+
+    for file_name in files:
+        match = re.search(r'__(\w+)__', file_name)
+        if match:
+            absolute_paths.append(os.path.abspath(os.path.join(dir, file_name)))
+
+    return absolute_paths
+
+
+def copy_to(paths, dir):
+    if not os.path.exists(dir):
+        os.mkdir(dir)
+
+    for path in paths:
+        file_name = os.path.basename(path)
+        new_path = os.path.join(dir, file_name)
+
+        if os.path.exists(new_path):
+            os.remove(new_path)
+        shutil.copy(path, new_path)
+
+
+def zip_to(paths, zip_dir):
+    with zipfile.ZipFile(zip_dir, "w", zipfile.ZIP_DEFLATED) as zf:
+        for path in paths:
+            zf.write(path, os.path.basename(path))
 
 
 def main():
@@ -53,8 +76,18 @@ def main():
         print("error: must specify one or more dirs")
         sys.exit(1)
 
-        # +++your code here+++
-        # Call your functions
+    paths = []
+    for dir in args:
+        paths.extend(get_special_paths(dir))
+
+    # I'm always printing the paths and running the 2 methods (when set) for teaching purposes
+    print('Special paths:')
+    print('\n'.join(paths))
+
+    if todir:
+        copy_to(paths, todir)
+    if tozip:
+        zip_to(paths, tozip)
 
 
 if __name__ == "__main__":
